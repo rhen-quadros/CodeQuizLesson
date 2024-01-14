@@ -1,54 +1,17 @@
-// <!DOCTYPE html>
-// <html>
-//   <head>
-//     <title>CSS Box Styling</title>
-//     <meta charset="UTF-8" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1" />
-//     <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
-//   </head>
-//   <body>
-//     <header>
-//       <div class= "large-font">Word Guess Game</div>
-//       <button class="start-button">Start</button>
-//     </header>
+// DOM elements
+const scoreElement = document.querySelector("#final-score");
+const timerElement = document.querySelector(".timer");
+const startButton = document.querySelector("#start");
+const questionContainer = document.querySelector("#questions");
+const questionTitle = document.querySelector("#question-title");
+const choicesContainer = document.querySelector("#choices");
+var feedbackElement = document.getElementById("feedback");
+var finalScoreElement = document.getElementById("final-score");
 
-//     <main>
-//       <section>
-//         <div class="card word-guess">
-//           <div class="large-font word-blanks">J _ v _ S c r_ _t</div>
-//         </div>
-//       </section>
+var highScoresList = document.getElementById("highscores");
+var clearButton = document.getElementById("clear");
 
-//       <section>
-//         <div class="card results">
-//           <div class = "win-loss-container">
-//           <div>
-//           <h2>Wins: <span class="win">0 </span> </h2>
-//           <h2>Losses: <span class="lose">0</span></h2>
-//         </div>
-//           <button class="reset-button">Reset Score</button>
-//       </div>
-//           <div class= "card timer">
-//             <div class = "timer-text">
-//             <div class="large-font timer-count">10</div>
-//             <h3>seconds remaining</h3>
-//           </div>
-
-//           </div>
-//         </div>
-//       </section>
-//     </main>
-//     <script src="assets/js/script1.js"></script>
-//   </body>
-// </html>
-
-var score = document.querySelector("#final-score");
-var timerElement = document.querySelector(".timer");
-var startButton = document.querySelector("#start");
-var questionContainer = document.querySelector("#questions");
-var questionTitle = document.querySelector("#question-title");
-var choicesContainer = document.querySelector("#choices");
-
+// Questions
 var javascriptQuiz = [
   {
     question: "What is the result of the expression: 2 + 2 * 2?",
@@ -83,10 +46,12 @@ var javascriptQuiz = [
   },
 ];
 
-var timerOnDisplay = 0;
-var currentQuestionIndex = 0;
-var finalScore = 0;
-var isPlaying = false;
+// Game variables
+let timerOnDisplay = 0;
+let currentQuestionIndex = 0;
+let finalScore = 0;
+let isPlaying = false;
+let timer;
 
 // A start button that when clicked a timer starts and the first question appears.
 startButton.addEventListener("click", function () {
@@ -98,22 +63,27 @@ startButton.addEventListener("click", function () {
   timerOnDisplay = 75;
 
   startTimer();
+  document.getElementById("start-screen").classList.add("hide");
+  document.getElementById("questions").classList.remove("hide");
 });
 
 function startTimer() {
   timer = setInterval(function () {
     timerOnDisplay--;
     timerElement.textContent = timerOnDisplay;
-    document.getElementById("start-screen").classList.add("hide");
-    showQuestion();
 
-    if (timerOnDisplay === 0) {
+    if (
+      timerOnDisplay === 0 ||
+      currentQuestionIndex === javascriptQuiz.length
+    ) {
       clearInterval(timer);
       document.getElementById("questions").classList.add("hide");
       document.getElementById("end-screen").classList.remove("hide");
       console.log("Timer reached 0. End screen is now visible.");
+    } else {
+      showQuestion();
     }
-  }, 100);
+  }, 1000);
 }
 
 // Questions contain buttons for each answer.
@@ -142,19 +112,40 @@ function checkAnswer(selectedChoice) {
 
   if (selectedChoice === currentQuestion.correctChoice) {
     finalScore++;
+    document.getElementById("feedback").classList.remove("hide");
+    feedbackElement.textContent = "Correct!";
+
+    // If the answer clicked was incorrect then subtract time from the clock
+  } else {
+    timerOnDisplay -= 5;
+    timerElement.textContent = timerOnDisplay;
+    document.getElementById("feedback").classList.remove("hide");
+    feedbackElement.textContent = "Incorrect, lose 5 seconds!";
   }
 
   currentQuestionIndex++;
 
-  if (currentQuestion < javascriptQuiz.length) {
+  if (currentQuestionIndex < javascriptQuiz.length) {
     showQuestion();
+    // The quiz should end when all questions are answered or the timer reaches 0.
   } else {
     document.getElementById("questions").classList.add("hide");
     document.getElementById("end-screen").classList.remove("hide");
-    console.log("Timer reached 0. End screen is now visible.");
+    finalScoreElement.textContent = finalScore;
   }
 }
 
-// The quiz should end when all questions are answered or the timer reaches 0.
-
 // When the game ends, it should display their score and give the user the ability to save their initials and their score
+document.getElementById("submit").addEventListener("click", function () {
+  var initialsInput = document.getElementById("initials");
+  var initials = initialsInput.value.trim().slice(0, 3);
+  if (initials) {
+    highScores.push({ initials, score: finalScore });
+
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+
+    window.location.href = "highscores.html";
+  } else {
+    alert("Please enter your initials.");
+  }
+});
