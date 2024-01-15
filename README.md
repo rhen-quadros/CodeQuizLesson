@@ -13,7 +13,7 @@ Github Pages - https://rhen-quadros.github.io/CodeQuizLesson/highscores.html
 
 Outstanding bug - Highscores not showing on frontend but showing successfully on local storage
 
-UPDATE - Credit to Berk Toy for Supporting and submitting PR
+**UPDATE - Credit to Berk Toy for Supporting and submitting PR**
 
 Li's to render on frontend created and clear highscore logic created.
 
