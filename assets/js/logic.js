@@ -7,6 +7,8 @@ const questionTitle = document.querySelector("#question-title");
 const choicesContainer = document.querySelector("#choices");
 var feedbackElement = document.getElementById("feedback");
 var finalScoreElement = document.getElementById("final-score");
+var initialInputElement = document.getElementById("initials");
+var submitButton = document.getElementById("submit");
 
 var highScoresList = document.getElementById("highscores");
 var clearButton = document.getElementById("clear");
@@ -132,20 +134,42 @@ function checkAnswer(selectedChoice) {
     document.getElementById("questions").classList.add("hide");
     document.getElementById("end-screen").classList.remove("hide");
     finalScoreElement.textContent = finalScore;
+    displayHighScores(); // Call the displayHighScores function here
   }
 }
 
+// Display high scores on the page
+function displayHighScores() {
+  console.log("Displaying high scores...");
+  var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+  console.log("High scores from local storage:", highScores);
+
+  highScoresList.innerHTML = ""; // Clear previous high scores
+
+  highScores.forEach((score) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${score.initials} - ${score.score}`;
+    highScoresList.appendChild(listItem);
+  });
+}
+
 // When the game ends, it should display their score and give the user the ability to save their initials and their score
-document.getElementById("submit").addEventListener("click", function () {
-  var initialsInput = document.getElementById("initials");
-  var initials = initialsInput.value.trim().slice(0, 3);
+submitButton.addEventListener("click", function () {
+  var initials = initialInputElement.value.trim().slice(0, 3);
+
   if (initials) {
+    var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
     highScores.push({ initials, score: finalScore });
 
     localStorage.setItem("highScores", JSON.stringify(highScores));
 
     window.location.href = "highscores.html";
   } else {
-    alert("Please enter your initials.");
+    alert("Please enter initials");
   }
+});
+
+// Add this load event listener
+window.addEventListener("load", function () {
+  displayHighScores();
 });
