@@ -14,39 +14,6 @@ var highScoresList = document.getElementById("highscores");
 var clearButton = document.getElementById("clear");
 
 // Questions
-var javascriptQuiz = [
-  {
-    question: "What is the result of the expression: 2 + 2 * 2?",
-    choices: ["4", "6", "8", "10"],
-    correctChoice: "6",
-  },
-  {
-    question: "Which keyword is used to declare a variable in JavaScript?",
-    choices: ["var", "let", "const", "variable"],
-    correctChoice: "var",
-  },
-  {
-    question: "What does the 'DOM' stand for?",
-    choices: [
-      "Document Object Model",
-      "Data Object Model",
-      "Dynamic Object Model",
-      "Document Oriented Model",
-    ],
-    correctChoice: "Document Object Model",
-  },
-  {
-    question: "How do you check the type of a variable in JavaScript?",
-    choices: ["typeof", "type", "typeOf", "instanceof"],
-    correctChoice: "typeof",
-  },
-  {
-    question:
-      "Which method is used to add elements to the end of an array in JavaScript?",
-    choices: ["push()", "append()", "addToEnd()", "insertEnd()"],
-    correctChoice: "push()",
-  },
-];
 
 // Game variables
 let timerOnDisplay = 0;
@@ -138,21 +105,6 @@ function checkAnswer(selectedChoice) {
   }
 }
 
-// Display high scores on the page
-function displayHighScores() {
-  console.log("Displaying high scores...");
-  var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
-  console.log("High scores from local storage:", highScores);
-
-  highScoresList.innerHTML = ""; // Clear previous high scores
-
-  highScores.forEach((score) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = `${score.initials} - ${score.score}`;
-    highScoresList.appendChild(listItem);
-  });
-}
-
 // When the game ends, it should display their score and give the user the ability to save their initials and their score
 submitButton.addEventListener("click", function () {
   var initials = initialInputElement.value.trim().slice(0, 3);
@@ -169,7 +121,3 @@ submitButton.addEventListener("click", function () {
   }
 });
 
-// Add this load event listener
-window.addEventListener("load", function () {
-  displayHighScores();
-});
