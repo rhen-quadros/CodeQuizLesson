@@ -19,26 +19,7 @@ function displayHighScores() {
 
   console.log("Finished displaying high scores.");
 }
-
-// When the game ends, it should display their score and give the user the ability to save their initials and their score
-submitButton.addEventListener("click", function () {
-  console.log("Submit button clicked.");
-
-  var initials = initialInputElement.value.trim().slice(0, 3);
-
-  if (initials) {
-    console.log("Initials entered:", initials);
-
-    var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
-    highScores.push({ initials, score: finalScore });
-
-    localStorage.setItem("highScores", JSON.stringify(highScores));
-
-    window.location.href = "highscores.html";
-  } else {
-    alert("Please enter initials");
-  }
-});
+displayHighScores()
 
 // Clear high scores button
 clearButton.addEventListener("click", function () {
